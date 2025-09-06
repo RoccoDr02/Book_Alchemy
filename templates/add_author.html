@@ -1,22 +1,84 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=xIDjaDzZvt8qXJqL8czcwfAYdZ_YwdMGNZAFLxA8J5qlTMJ4mafjB5aluM7IGWk2GkfVmgi8jZTHPEbeC3iqRiisqEYidzwnibam8tFPYzKY5Q9CMw58NbulnfPvqn_or60bOg9IdPbdbnQVvQadKd-fuwK_Y1lVpG0CzvECig4" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9zdGVsbGFwYXJkb24tbWFlc3Ryb21ldGFsLmNvZGlvLmlvL3RlbXBsYXRlcyUyZmFkZF9hdXRob3IuaHRtbD9jb2Rpb19kb3dubG9hZF9uYW1lPWFkZF9hdXRob3IuaHRtbA"/></head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autor hinzufügen</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    form {
+      background-color: #fff;
+      padding: 30px 40px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    form h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+      color: #555;
+    }
+
+    input[type="text"],
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+    }
+
+    button {
+      margin-top: 20px;
+      width: 100%;
+      padding: 12px;
+      background-color: #2980b9;
+      color: white;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    button:hover {
+      background-color: #3498db;
+    }
+  </style>
+</head>
+<body>
 
   <form action="/add_author" method="POST">
-  <label for="name">Author Name:</label> 
-  <input type="text" id="name" name="name" required><br><br>
-  
-  <label for="birth_date">Birthdate:</label>
-  <input type="date" id="birth_date" name="birth_date" required><br><br>
-  <label for="date_of_death">Date of Death:</label> 
-  <input type="date" id="date_of_death" name="date_of_death"><br><br>
-  <input type="submit" value="Add Author"> 
+    <h2>Neuen Autor hinzufügen</h2>
+
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="birth_date">Geburtsdatum:</label>
+    <input type="date" id="birth_date" name="birth_date" required max="{{ current_date }}">
+
+    <label for="date_of_death">Sterbedatum:</label>
+    <input type="date" id="date_of_death" name="date_of_death" max="{{ current_date }}">
+
+    <button type="submit">Autor hinzufügen</button>
   </form>
 
-  </body>
+</body>
 </html>

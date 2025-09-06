@@ -1,59 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=ng4GYGkPYM8COkSTM1YGJkaundtHqlc7SRbXNLkZ3stUQvkqMivu-lxCVt6d7Gr_graIf_W8y7VzLnkO2H5z-xP4ilVIboPLndRy0_TmKTgWa_bCs_e_2Fe1--rvxJiIrGAeKK1XaMrV4pypBjWOXQ" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9zdGVsbGFwYXJkb24tbWFlc3Ryb21ldGFsLmNvZGlvLmlvL3RlbXBsYXRlcyUyZmhvbWUuaHRtbD9jb2Rpb19kb3dubG9hZF9uYW1lPWhvbWUuaHRtbA"/></head>
-  <body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meine Bibliothek</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    h1 {
+      text-align: center;
+      color: #2c3e50;
+    }
+    form.search-form {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    form.search-form input[type="text"], form.search-form select {
+      padding: 8px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    form.search-form button {
+      padding: 8px 12px;
+      background-color: #2980b9;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    form.search-form button:hover {
+      background-color: #3498db;
+    }
+    .books-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
+    }
+    .book-card {
+      background-color: white;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .book-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .book-card img {
+      width: 120px;
+      height: auto;
+      margin-bottom: 10px;
+      border-radius: 5px;
+    }
+    .delete-button {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .delete-button:hover {
+      background-color: #c0392b;
+    }
+    .message {
+      text-align: center;
+      color: red;
+      margin-bottom: 20px;
+    }
+    form.search-form button {
+    padding: 8px 12px;
+    background-color: #2980b9;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    }
 
-    <h1>Meine Bibliothek</h1>
+    form.search-form button:hover {
+        background-color: #3498db;
+    }
+  </style>
+</head>
+<body>
 
-    <form method="get" action="/">
-        <input type="text" name="search" placeholder="Suche nach Titel oder Autor" value="{{ search_query }}">
-        <button type="submit">Suchen/Sortieren</button>
+  <h1>Meine Bibliothek</h1>
 
-        <select name="sort">
-            <option value="title" {% if sort_field == 'title' %}selected{% endif %}>Titel</option>
-            <option value="author" {% if sort_field == 'author' %}selected{% endif %}>Autor</option>
-        </select>
-        <select name="direction">
-            <option value="asc" {% if direction == 'asc' %}selected{% endif %}>Aufsteigend</option>
-            <option value="desc" {% if direction == 'desc' %}selected{% endif %}>Absteigend</option>
-        </select>
-    </form>
+  <form class="search-form" method="get" action="/">
+  <input type="text" name="search" placeholder="Suche nach Titel oder Autor" value="{{ search_query }}">
 
-    {% if message %}
-        <p style="color:red;">{{ message }}</p>
-    {% endif %}
+  <select name="sort">
+    <option value="title" {% if sort_field == 'title' %}selected{% endif %}>Titel</option>
+    <option value="author" {% if sort_field == 'author' %}selected{% endif %}>Autor</option>
+  </select>
 
-    <hr>
+  <select name="direction">
+    <option value="asc" {% if direction == 'asc' %}selected{% endif %}>Aufsteigend</option>
+    <option value="desc" {% if direction == 'desc' %}selected{% endif %}>Absteigend</option>
+  </select>
+
+  <!-- Such-Button -->
+  <button type="submit">Suchen/Sortieren</button>
+
+  <!-- Neue Buttons in gleicher Höhe -->
+  <button type="button" onclick="window.location.href='{{ url_for('add_book') }}'">Buch hinzufügen</button>
+  <button type="button" onclick="window.location.href='{{ url_for('add_author') }}'">Autor hinzufügen</button>
+</form>
 
 
+  {% if message %}
+    <p class="message">{{ message }}</p>
+  {% endif %}
 
+  <div class="books-grid">
     {% for book in books %}
-    <div style="margin-bottom:20px;">
+      <div class="book-card">
+        <img src="{{ book.cover_url }}" alt="Cover von {{ book.title }}">
         <h3>{{ book.title }}</h3>
         <p>Autor: {{ book.author_name }}</p>
-        <img src="{{ book.cover_url }}" alt="Cover von {{ book.title }}" style="width:120px;">
-
-
-        <form method="POST" action="{{ url_for('delete_book', book_id=book.id) }}" style="display:inline;">
-            <button type="submit">Buch löschen</button>
+        <form method="POST" action="{{ url_for('delete_book', book_id=book.id) }}">
+          <button type="submit" class="delete-button" onclick="return confirm('Buch wirklich löschen?');">Buch löschen</button>
         </form>
-    </div>
+      </div>
     {% endfor %}
+  </div>
 
-
-    {% with messages = get_flashed_messages(with_categories=true) %}
-      {% if messages %}
-        <ul>
-          {% for category, message in messages %}
-            <li style="color: {% if category == 'success' %}green{% else %}red{% endif %};">{{ message }}</li>
-          {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
-
-  </body>
+</body>
 </html>

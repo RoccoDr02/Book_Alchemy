@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for, f
 from flask_sqlalchemy import SQLAlchemy
 import os
 from data_models import db, Author, Book
-from datetime import datetime
+from datetime import datetime, date
 import requests
 
 app = Flask(__name__)
@@ -60,7 +60,7 @@ def home():
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():
     success = False
-
+    current_date = date.today().isoformat()
     if request.method == 'POST':
         name = request.form.get('name')
         birth_date_str = request.form.get('birth_date')
@@ -77,7 +77,7 @@ def add_author():
         db.session.commit()
         success = True
 
-    return render_template('add_author.html', success=success)
+    return render_template('add_author.html', success=success, current_date=current_date)
 
 
 @app.route('/add_book', methods=['GET', 'POST'])
