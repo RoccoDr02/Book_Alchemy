@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 import os
 from data_models import db, Author, Book
@@ -18,17 +18,13 @@ with app.app_context():
 
 @app.route('/')
 def home():
-    # Query-Parameter: sortieren und suchen
-    sort_field = request.args.get('sort', 'id')       # 'title' oder 'author'
-    direction = request.args.get('direction', 'asc')  # 'asc' oder 'desc'
-    search_query = request.args.get('search', '').strip()  # Suchbegriff
+    sort_field = request.args.get('sort', 'id')
+    direction = request.args.get('direction', 'asc')
+    search_query = request.args.get('search', '').strip()
 
-    # Basis-Query: Bücher mit Author joinen
     books_query = Book.query.join(Author)
 
-    # Suche implementieren
     if search_query:
-        # Suche in Titel oder Autorname (case-insensitive)
         books_query = books_query.filter(
             db.or_(
                 Book.title.ilike(f'%{search_query}%'),
@@ -36,7 +32,6 @@ def home():
             )
         )
 
-    # Sortierung
     if sort_field == 'title':
         books_query = books_query.order_by(Book.title.desc() if direction=='desc' else Book.title.asc())
     elif sort_field == 'author':
@@ -46,16 +41,15 @@ def home():
 
     books = books_query.all()
 
-    # Bücher für Jinja vorbereiten
     books_with_details = []
     for book in books:
         books_with_details.append({
+            'id': book.id,
             'title': book.title,
             'author_name': book.author.name,
             'cover_url': f"https://covers.openlibrary.org/b/isbn/{book.isbn}-M.jpg"
         })
 
-    # Meldung, wenn keine Bücher gefunden wurden
     message = None
     if search_query and not books_with_details:
         message = f'Keine Bücher gefunden für "{search_query}".'
@@ -115,6 +109,23 @@ def add_book():
         success = True
 
     return render_template('add_book.html', authors=authors, success=success)
+
+
+@app.route('/book/<int:book_id>/delete', methods=['POST'])
+def delete_book(book_id):
+
+    book = Book.query.get_or_404(book_id)
+    author = book.author
+
+    db.session.delete(book)
+    db.session.commit()
+
+    remaining_books = Book.query.filter_by(author_id=author.id).count()
+    if remaining_books == 0:
+        db.session.delete(author)
+        db.session.commit()
+
+    return redirect(url_for('home'))
 
 
 if __name__ == '__main__':

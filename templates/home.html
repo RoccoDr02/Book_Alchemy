@@ -13,7 +13,6 @@
         <input type="text" name="search" placeholder="Suche nach Titel oder Autor" value="{{ search_query }}">
         <button type="submit">Suchen/Sortieren</button>
 
-        <!-- Sortierung optional weiterhin -->
         <select name="sort">
             <option value="title" {% if sort_field == 'title' %}selected{% endif %}>Titel</option>
             <option value="author" {% if sort_field == 'author' %}selected{% endif %}>Autor</option>
@@ -30,14 +29,31 @@
 
     <hr>
 
-    <!-- Bücherliste -->
+
+
     {% for book in books %}
     <div style="margin-bottom:20px;">
         <h3>{{ book.title }}</h3>
         <p>Autor: {{ book.author_name }}</p>
         <img src="{{ book.cover_url }}" alt="Cover von {{ book.title }}" style="width:120px;">
+
+
+        <form method="POST" action="{{ url_for('delete_book', book_id=book.id) }}" style="display:inline;">
+            <button type="submit">Buch löschen</button>
+        </form>
     </div>
     {% endfor %}
+
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <ul>
+          {% for category, message in messages %}
+            <li style="color: {% if category == 'success' %}green{% else %}red{% endif %};">{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
 
   </body>
 </html>
