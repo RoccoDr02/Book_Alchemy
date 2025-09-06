@@ -18,26 +18,30 @@ with app.app_context():
 
 @app.route('/')
 def home():
-    # Standardmäßig sortieren wir nach ID (Einfüge-Reihenfolge)
-    sort_field = request.args.get('sort', 'id')  # 'title' oder 'author'
+    # Query-Parameter: sortieren und suchen
+    sort_field = request.args.get('sort', 'id')       # 'title' oder 'author'
     direction = request.args.get('direction', 'asc')  # 'asc' oder 'desc'
+    search_query = request.args.get('search', '').strip()  # Suchbegriff
 
-    # Alle Bücher aus der DB
+    # Basis-Query: Bücher mit Author joinen
     books_query = Book.query.join(Author)
 
-    # Sortieren nach Titel oder Autorname
+    # Suche implementieren
+    if search_query:
+        # Suche in Titel oder Autorname (case-insensitive)
+        books_query = books_query.filter(
+            db.or_(
+                Book.title.ilike(f'%{search_query}%'),
+                Author.name.ilike(f'%{search_query}%')
+            )
+        )
+
+    # Sortierung
     if sort_field == 'title':
-        if direction == 'desc':
-            books_query = books_query.order_by(Book.title.desc())
-        else:
-            books_query = books_query.order_by(Book.title.asc())
+        books_query = books_query.order_by(Book.title.desc() if direction=='desc' else Book.title.asc())
     elif sort_field == 'author':
-        if direction == 'desc':
-            books_query = books_query.order_by(Author.name.desc())
-        else:
-            books_query = books_query.order_by(Author.name.asc())
+        books_query = books_query.order_by(Author.name.desc() if direction=='desc' else Author.name.asc())
     else:
-        # Standardsortierung nach ID
         books_query = books_query.order_by(Book.id.asc())
 
     books = books_query.all()
@@ -51,8 +55,13 @@ def home():
             'cover_url': f"https://covers.openlibrary.org/b/isbn/{book.isbn}-M.jpg"
         })
 
-    return render_template('home.html', books=books_with_details, sort_field=sort_field, direction=direction)
+    # Meldung, wenn keine Bücher gefunden wurden
+    message = None
+    if search_query and not books_with_details:
+        message = f'Keine Bücher gefunden für "{search_query}".'
 
+    return render_template('home.html', books=books_with_details,
+                           sort_field=sort_field, direction=direction, search_query=search_query, message=message)
 
 @app.route('/add_author', methods=['GET', 'POST'])
 def add_author():

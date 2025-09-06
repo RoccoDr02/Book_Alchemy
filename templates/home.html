@@ -10,23 +10,27 @@
     <h1>Meine Bibliothek</h1>
 
     <form method="get" action="/">
-        <label for="sort">Sortieren nach:</label>
-        <select name="sort" id="sort">
+        <input type="text" name="search" placeholder="Suche nach Titel oder Autor" value="{{ search_query }}">
+        <button type="submit">Suchen/Sortieren</button>
+
+        <!-- Sortierung optional weiterhin -->
+        <select name="sort">
             <option value="title" {% if sort_field == 'title' %}selected{% endif %}>Titel</option>
             <option value="author" {% if sort_field == 'author' %}selected{% endif %}>Autor</option>
         </select>
-
         <select name="direction">
             <option value="asc" {% if direction == 'asc' %}selected{% endif %}>Aufsteigend</option>
             <option value="desc" {% if direction == 'desc' %}selected{% endif %}>Absteigend</option>
         </select>
-
-        <button type="submit">Sortieren</button>
     </form>
+
+    {% if message %}
+        <p style="color:red;">{{ message }}</p>
+    {% endif %}
 
     <hr>
 
-
+    <!-- Bücherliste -->
     {% for book in books %}
     <div style="margin-bottom:20px;">
         <h3>{{ book.title }}</h3>
