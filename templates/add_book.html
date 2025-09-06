@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=Sx92-tIjeD7U1wg37XgDN2tovzs3_W70IA6ODn_5G43ffYX0ZZWk3PeAEdg1dmbC9RDQddxkbJlBhgNhFrjlpXMKCxzuu_XeMpTNvVQd69XMl2RGEdWr9xKa7E1EahcHKirJTplcEZKWov1nh0E-5IqtWRGbYuMDi3t-4kcgHXU" charset="UTF-8"></script><link rel="stylesheet" crossorigin="anonymous" href="https://gc.kis.v2.scr.kaspersky-labs.com/E3E8934C-235A-4B0E-825A-35A08381A191/abn/main.css?attr=aHR0cHM6Ly9zdGVsbGFwYXJkb24tbWFlc3Ryb21ldGFsLmNvZGlvLmlvL3RlbXBsYXRlcyUyZmFkZF9ib29rLmh0bWw_Y29kaW9fZG93bmxvYWRfbmFtZT1hZGRfYm9vay5odG1s"/></head>
+  <body>
+
+  <form action="/add_book" method="POST">
+  <label for="title">Titel:</label>
+    <input type="text" name="title" id="title" required><br><br>
+
+    <!-- ISBN -->
+    <label for="isbn">ISBN:</label>
+    <input type="text" name="isbn" id="isbn" required><br><br>
+
+    <!-- Erscheinungsjahr -->
+    <label for="publication_year">Erscheinungsjahr:</label>
+    <input type="number" name="publication_year" id="publication_year" required><br><br>
+
+    <!-- Autor Dropdown -->
+    <label for="author">Autor:</label>
+    <select name="author_id" id="author" required>
+        {% for author in authors %}
+            <option value="{{ author.id }}">{{ author.name }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <button type="submit">Buch hinzufügen</button>
+  </form>
+
+  </body>
+</html>
